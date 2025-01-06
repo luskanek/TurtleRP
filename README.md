@@ -1,3 +1,7 @@
+## TurtleRP Optimized
+
+TurtleRP has an issue that causes the game to freeze frequently. This is caused by the addon generating an extreme amount of memory garbage, triggering more garbage collections, which will freeze the game for its duration. It also uses a lot of CPU, reducing average framerate. This fork addresses these issues, likely reducing resource usage by 99%+, while preserving all the functionality of the addon.
+
 ## TurtleRP
 
 An RP addon custom-made for Vanilla WoW.
