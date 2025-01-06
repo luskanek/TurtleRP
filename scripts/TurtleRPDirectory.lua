@@ -36,14 +36,19 @@ end
 function TurtleRP.show_player_locations()
   local onlinePlayers = TurtleRP.get_players_online()
   local createdFrames = 0
-  for i, v in onlinePlayers do
-    if i ~= UnitName("player") then
-      local zonesByID = TurtleRP.LoadZones(GetMapZones(GetCurrentMapContinent()))
-      if TurtleRPCharacters[i] and TurtleRPCharacters[i]['zone'] == zonesByID[GetCurrentMapZone()] then
-        if TurtleRPCharacters[i]['zoneX'] and TurtleRPCharacters[i]['zoneY'] then
-          if TurtleRPCharacters[i]['zoneX'] ~= "false" and TurtleRPCharacters[i]['zoneY'] ~= "false" then
-            local zoneX = tonumber(TurtleRPCharacters[i]['zoneX'])
-            local zoneY = tonumber(TurtleRPCharacters[i]['zoneY'])
+  local zonesByID = TurtleRP.GetZones(GetCurrentMapContinent())
+  local currentZone = GetCurrentMapZone()
+  local selfName = UnitName("player")
+  for charName, character in pairs(onlinePlayers) do
+    if charName ~= selfName then
+      local zone = character["zone"]
+      local zoneX = character["zoneX"]
+      local zoneY = character["zoneY"]
+      if character and zone == zonesByID[currentZone] then
+        if zoneX and zoneY then
+          if zoneX ~= "false" and zoneY ~= "false" then
+            zoneX = tonumber(zoneX)
+            zoneY = tonumber(zoneY)
             local playerPositionFrame = getglobal("TurtleRP_MapPlayerPosition_" .. createdFrames)
             if playerPositionFrame == nil then
               playerPositionFrame = CreateFrame("Button", "TurtleRP_MapPlayerPosition_" .. createdFrames, WorldMapDetailFrame, "TurtleRP_WorldMapUnitTemplate")
@@ -53,9 +58,9 @@ function TurtleRP.show_player_locations()
             local mapLeft = WorldMapDetailFrame:GetLeft()
             local mapHeight = WorldMapDetailFrame:GetHeight()
             local mapLeft = WorldMapDetailFrame:GetLeft()
-            playerPositionFrame.full_name = i
-            if TurtleRPCharacters[i]['full_name'] ~= nil and TurtleRPCharacters[i]['full_name'] ~= "" then
-              playerPositionFrame.full_name = TurtleRPCharacters[i]['full_name']
+            playerPositionFrame.full_name = charName
+            if character['full_name'] ~= nil and character['full_name'] ~= "" then
+              playerPositionFrame.full_name = character['full_name']
             end
             playerPositionFrame:SetPoint("CENTER", WorldMapDetailFrame, "TOPLEFT", zoneX * mapWidth, zoneY * mapHeight * -1)
             playerPositionFrame:Show()
@@ -157,12 +162,16 @@ function TurtleRP.renderDirectory(directoryOffset)
   end
 end
 
+local onlinePlayers = {}
 function TurtleRP.get_players_online()
-  local onlinePlayers = {}
-  for i, v in TurtleRPCharacters do
+  for k, v in pairs(onlinePlayers) do
+    onlinePlayers[k] = nil
+  end
+  local currentTime = time()
+  for i, v in pairs(TurtleRPCharacters) do
     if TurtleRPQueryablePlayers[i] then
       if type(TurtleRPQueryablePlayers[i]) == "number" then
-        if TurtleRPQueryablePlayers[i] > (time() - 65) then
+        if TurtleRPQueryablePlayers[i] > (currentTime - 65) then
           onlinePlayers[i] = v
         end
       end
@@ -192,6 +201,14 @@ function TurtleRP.LoadZones(...)
     info[i] = arg[i]
   end
   return info
+end
+
+TurtleRP.ContinentCache = {}
+function TurtleRP.GetZones(continentID)
+    if not TurtleRP.ContinentCache[continentID] then
+        TurtleRP.ContinentCache[continentID] = TurtleRP.LoadZones(GetMapZones(continentID))
+    end
+    return TurtleRP.ContinentCache[continentID]
 end
 
 function TurtleRP.Directory_FrameDropDown_OnClick()

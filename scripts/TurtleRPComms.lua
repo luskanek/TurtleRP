@@ -178,7 +178,7 @@ function TurtleRP.communication_events()
 
   end)
 
-  local CheckMessages = CreateFrame("Frame")
+  local CheckMessages = CreateFrame("Frame", "TurtleRPMessageScanner")
   CheckMessages:RegisterEvent("CHAT_MSG_CHANNEL")
   CheckMessages:SetScript("OnEvent", function()
     if event == "CHAT_MSG_CHANNEL" then
@@ -374,13 +374,17 @@ function TurtleRP.recievePingInformation(playerName, msg)
   TurtleRPCharacters[playerName]['zone'] = zoneText
   if string.find(zoneText, '~') then
     local splitString = string.split(zoneText, "~")
-    TurtleRPCharacters[playerName]['zone'] = splitString[1]
+    local zone = splitString[1]
+    TurtleRPCharacters[playerName]['zone'] = zone
     if splitString[2] and splitString[3] then
       local zoneX = splitString[2]
       local zoneY = splitString[3]
       TurtleRPCharacters[playerName]['zoneX'] = zoneX
       TurtleRPCharacters[playerName]['zoneY'] = zoneY
-      TurtleRP.show_player_locations()
+      -- Only update player locations if the player is in the zone we're looking at
+      if zone == TurtleRP.GetZones(GetCurrentMapContinent())[GetCurrentMapZone()] then
+        TurtleRP.show_player_locations()
+      end
     end
   end
 end
