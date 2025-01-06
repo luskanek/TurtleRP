@@ -1,5 +1,5 @@
 ## Interface: 11200
-## Title: TurtleRP - |cffabd473TTRP
+## Title: TurtleRP Optimized - |cffabd473TTRP
 ## Author: tempranova / Drixi / Vee
 ## Version: 1.1.0
 ## Notes: RP Addon custom made for Turtle WoW
