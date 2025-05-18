@@ -113,6 +113,7 @@ function TurtleRP.buildTooltip(playerName, targetType)
   end
 
   -- Getting details for character
+  local nsfw            = locallyRetrievable and characterInfo["nsfw"] or nil
   local fullName        = locallyRetrievable and characterInfo["full_name"] or UnitName(targetType)
   local race            = locallyRetrievable and characterInfo["race"] or UnitRace(targetType)
   local class           = locallyRetrievable and characterInfo["class"] or UnitClass(targetType)
@@ -157,6 +158,15 @@ function TurtleRP.buildTooltip(playerName, targetType)
   local OOCandPronounsText  = "OOC Info" .. TurtleRP.getPronounsText(ooc_pronouns, pronounColor)
 
   -- Modify tooltip
+  if nsfw == "1" and TurtleRPSettings["show_nsfw"] == "0" then
+     TurtleRP.gameTooltip:AddLine(blankLine)
+     TurtleRP.gameTooltip:AddLine("NSFW Profile")
+     TurtleRP.gameTooltip:AddLine("To view this profile, enable the 'Show NSFW'", 1, 1, 1)
+     TurtleRP.gameTooltip:AddLine("option in TTRP settings.", 1, 1, 1)
+     TurtleRP.gameTooltip:Show()
+   return
+  end
+
   local l = 1
   if getglobal("GameTooltipTextLeft1"):GetText() == nil then
     TurtleRP.gameTooltip:AddLine(thisClassColor .. titleExtraSpaces .. fullName)

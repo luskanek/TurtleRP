@@ -219,10 +219,24 @@
               </Anchors>
               <Color r="0" g="0" b="0" a="0.3" />
             </Texture>
+            <!-- NSFW Text -->
+            <FontString name="$parent_NSFWText" inherits="OVERLAY" font="Fonts\FRIZQT__.ttf" text="NSFW Profile">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parent_hr" relativePoint="LEFT">
+                  <Offset>
+                    <AbsDimension x="0" y="-15" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="0" g="0" b="0" />
+            </FontString>
             <!-- Name Text -->
             <FontString name="$parent_NameText" inherits="OVERLAY" font="Fonts\FRIZQT__.ttf" text="Character Title and Name">
               <Anchors>
-                <Anchor point="LEFT" relativeTo="$parent_hr" relativePoint="LEFT">
+                <Anchor point="LEFT" relativeTo="$parent_NSFWText" relativePoint="LEFT">
                   <Offset>
                     <AbsDimension x="0" y="-15" />
                   </Offset>
@@ -362,6 +376,23 @@
           </Layer>
         </Layers>
         <Frames>
+          <CheckButton name="$parent_NSFWButton" inherits="UICheckButtonTemplate">
+            <Size>
+              <AbsDimension x="25" y="25" />
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="$parent_NSFWText" relativePoint="RIGHT">
+                <Offset>
+                  <AbsDimension x="2" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>
+                TurtleRP.change_nsfw_status()
+              </OnClick>
+            </Scripts>
+          </CheckButton>
           <Button name="$parent_SaveButton" inherits="UIPanelButtonGrayTemplate" text="Save">
             <Size>
               <AbsDimension x="50" y="25" />
@@ -1856,9 +1887,23 @@
               <Color r="0" g="0" b="0" />
             </FontString>
             <!-- Share Location Setting Text -->
-            <FontString name="$parent_MinimapHideText" inherits="OVERLAY" font="Fonts\FRIZQT__.ttf" text="Share Map Location">
+            <FontString name="$parent_ShareLocText" inherits="OVERLAY" font="Fonts\FRIZQT__.ttf" text="Share Map Location">
               <Anchors>
                 <Anchor point="TOPLEFT" relativeTo="$parent_MinimapHideText" relativePoint="BOTTOMLEFT">
+                  <Offset>
+                    <AbsDimension x="0" y="-10" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="0" g="0" b="0" />
+            </FontString>
+            <!-- Show NSFW profiles text -->
+            <FontString name="$parent_ShowNSFWText" inherits="OVERLAY" font="Fonts\FRIZQT__.ttf" text="Show NSFW profiles">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_ShareLocText" relativePoint="BOTTOMLEFT">
                   <Offset>
                     <AbsDimension x="0" y="-10" />
                   </Offset>
@@ -2010,6 +2055,28 @@
                   TurtleRPSettings["share_location"] = "0"
                 end
                 TurtleRP.pingWithLocationAndVersion("P")
+              </OnClick>
+            </Scripts>
+          </CheckButton>
+          <!-- Show NSFW profiles button -->
+          <CheckButton name="$parent_ShowNSFWButton" inherits="UICheckButtonTemplate">
+            <Size>
+              <AbsDimension x="25" y="25" />
+            </Size>
+            <Anchors>
+              <Anchor point="RIGHT" relativeTo="$parent_ShareLocationButton" relativePoint="RIGHT">
+                <Offset>
+                  <AbsDimension x="0" y="-20"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>
+                if TurtleRPSettings["show_nsfw"] == "0" then
+                  TurtleRPSettings["show_nsfw"] = "1"
+                else
+                  TurtleRPSettings["show_nsfw"] = "0"
+                end
               </OnClick>
             </Scripts>
           </CheckButton>

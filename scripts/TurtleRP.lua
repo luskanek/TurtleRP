@@ -67,6 +67,7 @@ function TurtleRP:OnEvent()
     local TurtleRPCharacterInfoTemplate = {}
 
     TurtleRPCharacterInfoTemplate["keyM"] = TurtleRP.randomchars()
+    TurtleRPCharacterInfoTemplate["nsfw"] = "0"
     TurtleRPCharacterInfoTemplate["icon"] = ""
     TurtleRPCharacterInfoTemplate["full_name"] = UnitName("player")
     TurtleRPCharacterInfoTemplate["race"] = UnitRace("player")
@@ -116,6 +117,12 @@ function TurtleRP:OnEvent()
     if TurtleRPCharacters == nil then
       TurtleRPCharacters = {}
       TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
+    else
+      for character in pairs(TurtleRPCharacters) do
+        if not TurtleRPCharacters[character]["nsfw"] then
+           TurtleRPCharacters[character]["nsfw"] = "0"
+         end
+      end
     end
     if TurtleRPSettings == nil then
       TurtleRPSettings = TurtleRPSettingsTemplate
@@ -268,6 +275,12 @@ function TurtleRP.populate_interface_user_data()
   TurtleRP_AdminSB_Content5_PVPButton:SetChecked(TurtleRPSettings["bgs"] == "on" and true or false)
   TurtleRP_AdminSB_Content5_NameButton:SetChecked(TurtleRPSettings["name_size"] == "1" and true or false)
 
+  if TurtleRPCharacterInfo["nsfw"] == "1" then
+    TurtleRP_AdminSB_Content1_NSFWButton:SetChecked(true)
+  else
+    TurtleRP_AdminSB_Content1_NSFWButton:SetChecked(false)
+  end
+
   if TurtleRPCharacterInfo["currently_ic"] == "1" then
     TurtleRP_AdminSB_Content1_ICButton:SetChecked(true)
     TurtleRP_IconTray_ICModeButton2:Show()
@@ -296,6 +309,9 @@ function TurtleRP.populate_interface_user_data()
     TurtleRP_MinimapIcon:Hide()
   end
 
+  if TurtleRPSettings["show_nsfw"] == "1" then
+    TurtleRP_AdminSB_Content5_ShowNSFWButton:SetChecked(true)
+  end
 end
 
 function TurtleRP.setCharacterIcon()
@@ -331,6 +347,19 @@ end
 -----
 -- Saving
 -----
+function TurtleRP.change_nsfw_status()
+  if TurtleRPCharacterInfo["nsfw"] ~= "1" then
+    TurtleRPCharacterInfo["nsfw"] = "1"
+    TurtleRP_AdminSB_Content1_NSFWButton:SetChecked(true)
+  else
+    TurtleRPCharacterInfo["nsfw"] = "0"
+    TurtleRP_AdminSB_Content1_NSFWButton:SetChecked(false)
+  end
+  TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
+  message(TurtleRPCharacterInfo["nsfw"])
+  TurtleRP.save_general(TurtleRPCharacterInfo["nsfw"])
+end
+
 function TurtleRP.change_ic_status()
   if TurtleRPCharacterInfo["currently_ic"] ~= "1" then
     TurtleRPCharacterInfo["currently_ic"] = "1"
