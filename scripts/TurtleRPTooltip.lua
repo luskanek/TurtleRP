@@ -160,9 +160,9 @@ function TurtleRP.buildTooltip(playerName, targetType)
   -- Modify tooltip
   if nsfw == "1" and TurtleRPSettings["show_nsfw"] == "0" then
      TurtleRP.gameTooltip:AddLine(blankLine)
-     TurtleRP.gameTooltip:AddLine("NSFW Profile")
-     TurtleRP.gameTooltip:AddLine("To view this profile, enable the 'Show NSFW'", 1, 1, 1)
-     TurtleRP.gameTooltip:AddLine("option in TTRP settings.", 1, 1, 1)
+     TurtleRP.gameTooltip:AddLine("NSFW RP Profile")
+     TurtleRP.gameTooltip:AddLine("To view this profile, enable the 'Show NSFW'", 0.7, 0.7, 0.7)
+     TurtleRP.gameTooltip:AddLine("option in TTRP settings.", 0.7, 0.7, 0.7)
      TurtleRP.gameTooltip:Show()
    return
   end
