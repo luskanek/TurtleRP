@@ -356,7 +356,6 @@ function TurtleRP.change_nsfw_status()
     TurtleRP_AdminSB_Content1_NSFWButton:SetChecked(false)
   end
   TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
-  message(TurtleRPCharacterInfo["nsfw"])
   TurtleRP.save_general(TurtleRPCharacterInfo["nsfw"])
 end
 
