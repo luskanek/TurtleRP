@@ -84,14 +84,16 @@ function TurtleRP.Directory_ScrollBar_Update()
   local totalDirectoryChars = 0
   local totalDirectoryOnline = 0
   for i, v in TurtleRPCharacters do
-    if TurtleRPQueryablePlayers[i] then
-      totalDirectoryChars = totalDirectoryChars + 1
-      if type(TurtleRPQueryablePlayers[i]) == "number" then
-        if TurtleRPQueryablePlayers[i] > (time() - 65) then
-          totalDirectoryOnline = totalDirectoryOnline + 1
-        end
+   if TurtleRPCharacters[i]['nsfw'] == "0" or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
+      if TurtleRPQueryablePlayers[i] then
+         totalDirectoryChars = totalDirectoryChars + 1
+         if type(TurtleRPQueryablePlayers[i]) == "number" then
+            if TurtleRPQueryablePlayers[i] > (time() - 65) then
+               totalDirectoryOnline = totalDirectoryOnline + 1
+            end
+         end
       end
-    end
+   end
   end
   TurtleRP_DirectoryFrame_Directory_Total:SetText(totalDirectoryChars .. " adventurers found (" .. totalDirectoryOnline .. " online)")
 
@@ -105,28 +107,30 @@ function TurtleRP.renderDirectory(directoryOffset)
   local currentArrayNumber = 1
   for i, v in TurtleRPCharacters do
     if TurtleRPCharacters[i] then
-      if TurtleRPCharacters[i]['full_name'] == nil then
-        TurtleRPCharacters[i]['full_name'] = ""
-      end
-      local resultShown = true
-      if TurtleRP.searchTerm ~= "" then
-        if string.find(string.lower(i), string.lower(TurtleRP.searchTerm)) == nil and string.find(string.lower(v['full_name']), string.lower(TurtleRP.searchTerm)) == nil then
-          resultShown = false
-        end
-      end
-      if resultShown then
-        remadeArray[currentArrayNumber] = v
-        remadeArray[currentArrayNumber]['player_name'] = i
-        remadeArray[currentArrayNumber]['status'] = "Offline"
-        remadeArray[currentArrayNumber]['zone'] = v['zone'] and v['zone'] or ""
-        if TurtleRPQueryablePlayers[i] then
-          if type(TurtleRPQueryablePlayers[i]) == "number" then
-            if TurtleRPQueryablePlayers[i] > (time() - 65) then
-              remadeArray[currentArrayNumber]['status'] = "Online"
+      if TurtleRPCharacters[i]['nsfw'] == '0' or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
+         if TurtleRPCharacters[i]['full_name'] == nil then
+         TurtleRPCharacters[i]['full_name'] = ""
+         end
+         local resultShown = true
+         if TurtleRP.searchTerm ~= "" then
+         if string.find(string.lower(i), string.lower(TurtleRP.searchTerm)) == nil and string.find(string.lower(v['full_name']), string.lower(TurtleRP.searchTerm)) == nil then
+            resultShown = false
+         end
+         end
+         if resultShown then
+         remadeArray[currentArrayNumber] = v
+         remadeArray[currentArrayNumber]['player_name'] = i
+         remadeArray[currentArrayNumber]['status'] = "Offline"
+         remadeArray[currentArrayNumber]['zone'] = v['zone'] and v['zone'] or ""
+         if TurtleRPQueryablePlayers[i] then
+            if type(TurtleRPQueryablePlayers[i]) == "number" then
+               if TurtleRPQueryablePlayers[i] > (time() - 65) then
+               remadeArray[currentArrayNumber]['status'] = "Online"
+               end
             end
-          end
-        end
-        currentArrayNumber = currentArrayNumber + 1
+         end
+         currentArrayNumber = currentArrayNumber + 1
+         end
       end
     end
   end
