@@ -108,7 +108,7 @@ function TurtleRP:OnEvent()
     TurtleRPSettingsTemplate["name_size"] = "1"
     TurtleRPSettingsTemplate["minimap_icon_size"] = "0"
     TurtleRPSettingsTemplate["hide_minimap_icon"] = "1"
-    TurtleRPSettingsTemplate["share_location"] = "1"
+    TurtleRPSettingsTemplate["share_location"] = "0"
 
     -- Global character defaults setup
     if TurtleRPCharacterInfo == nil then
