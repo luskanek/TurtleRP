@@ -2499,9 +2499,9 @@
     </Scripts>
   </Frame>
 
-  <Frame name="TurtleRP_IconSelector" hidden="true">
+  <Frame name="TurtleRP_IconSelector" parent="TurtleRP_AdminSB" hidden="true">
     <Size>
-      <AbsDimension x="165" y="150" />
+      <AbsDimension x="256" y="244" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="TurtleRP_AdminSB" relativePoint="CENTER">
@@ -2525,7 +2525,7 @@
       <!-- Close button -->
       <Button name="$parent_CloseButton" inherits="UIPanelCloseButton">
         <Size>
-          <AbsDimension x="20" y="20" />
+          <AbsDimension x="24" y="24" />
         </Size>
         <Anchors>
           <Anchor point="TOPRIGHT">
@@ -2538,12 +2538,12 @@
       <!-- Filter search -->
       <EditBox name="$parent_FilterSearchInput" maxLetters="20" inherits="InputBoxTemplate" visible="true" enableMouse="true" autoFocus="false">
         <Size>
-          <AbsDimension x="70" y="20" />
+          <AbsDimension x="144" y="20" />
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="20" y="-12" />
+              <AbsDimension x="22" y="-12" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -2573,24 +2573,21 @@
         </Scripts>
       </Button>
       <ScrollFrame name="$parent_ScrollBox" inherits="FauxScrollFrameTemplate">
-        <Size>
-          <AbsDimension x="125" y="100" />
-        </Size>
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
             <Offset>
-              <AbsDimension x="15" y="-35" />
+              <AbsDimension x="18" y="-36" />
             </Offset>
           </Anchor>
           <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
             <Offset>
-              <AbsDimension x="-25" y="20" />
+              <AbsDimension x="-36" y="18" />
             </Offset>
           </Anchor>
         </Anchors>
         <Scripts>
           <OnVerticalScroll>
-            FauxScrollFrame_OnVerticalScroll(25, TurtleRP.Icon_ScrollBar_Update);
+            FauxScrollFrame_OnVerticalScroll(32, TurtleRP.Icon_ScrollBar_Update);
           </OnVerticalScroll>
           <OnShow>
             TurtleRP.Icon_ScrollBar_Update()

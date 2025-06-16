@@ -168,24 +168,24 @@ function TurtleRP.create_icon_selector()
   TurtleRP.iconSelectorFilter = ""
   TurtleRP_IconSelector_FilterSearchInput:SetText("")
   local currentLine = FauxScrollFrame_GetOffset(TurtleRP_IconSelector_ScrollBox)
-  TurtleRP.renderIcons((currentLine * 5))
+  TurtleRP.renderIcons((currentLine))
 end
 
 function TurtleRP.Icon_ScrollBar_Update()
-  FauxScrollFrame_Update(TurtleRP_IconSelector_ScrollBox, 450, 250, 25)
+  FauxScrollFrame_Update(TurtleRP_IconSelector_ScrollBox, 450, 250, 32)
   local currentLine = FauxScrollFrame_GetOffset(TurtleRP_IconSelector_ScrollBox)
-  TurtleRP.renderIcons((currentLine * 5))
+  TurtleRP.renderIcons((currentLine))
 end
 
 function TurtleRP.makeIconFrames()
   local IconFrames = {}
   local numberOnRow = 0
   local currentRow = 0
-  for i=1,20 do
+  for i=1,36 do
     local thisIconFrame = CreateFrame("Button", "TurtleRPIcon_" .. i, TurtleRP_IconSelector_ScrollBox)
-    thisIconFrame:SetWidth(25)
-    thisIconFrame:SetHeight(25)
-    thisIconFrame:SetPoint("TOPLEFT", TurtleRP_IconSelector_ScrollBox, numberOnRow * 25, currentRow * -25)
+    thisIconFrame:SetWidth(32)
+    thisIconFrame:SetHeight(32)
+    thisIconFrame:SetPoint("TOPLEFT", TurtleRP_IconSelector_ScrollBox, numberOnRow * 32, currentRow * -32)
     thisIconFrame:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
     thisIconFrame:SetText(i)
     thisIconFrame:SetFont("Fonts\\FRIZQT__.ttf", 0)
@@ -198,7 +198,7 @@ function TurtleRP.makeIconFrames()
     end)
     IconFrames[i] = thisIconFrame
     numberOnRow = numberOnRow + 1
-    if (i - math.floor(i/5)*5) == 0 then
+    if (i - math.floor(i/6)*6) == 0 then
       currentRow = currentRow + 1
       numberOnRow = 0
     end
