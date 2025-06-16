@@ -184,6 +184,10 @@ function TurtleRP:OnEvent()
         TurtleRP.log("Visit our Discord for more help.")
       elseif msg == "dir" or msg == "directory" then
         TurtleRP.OpenDirectory()
+      elseif msg == "tray" then
+         TurtleRP_IconTray:ClearAllPoints()
+         TurtleRP_IconTray:SetPoint("CENTER", "UIParent")
+         TurtleRP_IconTray:Show()
       else
         TurtleRP.OpenAdmin()
       end
