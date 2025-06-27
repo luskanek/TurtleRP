@@ -1,3 +1,16 @@
+## Turtle RP Official
+
+Turtle's RP scene has been an integral party of the community since the earliest days of the network. This addon was forked and made official after numerous community requests for assistance moderating and growing the roleplay community.
+
+### Initial Release:
+- Handful of optimizations
+- Addition of a NSFW Profile Toggle
+- Addition of a "See NSFW Profiles" Toggle (DEFAULT: OFF)
+- Changed default behavior of "Show Map Location" to OFF.
+
+Many thanks from the team and community to those who will contribute to this addon, and those who did prior. Their notes are below.
+
+
 ## TurtleRP Optimized
 
 TurtleRP has an issue that causes the game to freeze frequently. This is caused by the addon generating an extreme amount of memory garbage, triggering more garbage collections, which will freeze the game for its duration. It also uses a lot of CPU, reducing average framerate. This fork addresses these issues, likely reducing resource usage by 99%+, while preserving all the functionality of the addon.
