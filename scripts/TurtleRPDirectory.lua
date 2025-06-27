@@ -107,7 +107,7 @@ function TurtleRP.renderDirectory(directoryOffset)
   local currentArrayNumber = 1
   for i, v in TurtleRPCharacters do
     if TurtleRPCharacters[i] then
-      if TurtleRPCharacters[i]['nsfw'] == '0' or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
+      if not TurtleRPCharacters[i]['nsfw'] or TurtleRPCharacters[i]['nsfw'] == '' or TurtleRPCharacters[i]['nsfw'] == '0' or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
          if TurtleRPCharacters[i]['full_name'] == nil then
          TurtleRPCharacters[i]['full_name'] = ""
          end
