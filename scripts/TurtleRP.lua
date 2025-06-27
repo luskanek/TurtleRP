@@ -40,8 +40,8 @@ TurtleRP.currentlyViewedPlayerFrame = nil
 TurtleRP.locationFrames = {}
 TurtleRP.showDescription = nil
 TurtleRP.secondColumn = "Character Name"
-TurtleRP.sortByKey = nil
-TurtleRP.sortByOrder = 0
+TurtleRP.sortByKey = "status"
+TurtleRP.sortByOrder = 1
 TurtleRP.searchTerm = ""
 -- Accounting for PFUI, Go Shagu Go
 if pfUI ~= nil and pfUI.uf ~= nil and pfUI.uf.target ~= nil then

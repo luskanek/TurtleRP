@@ -393,8 +393,9 @@
                   TurtleRP.sortByOrder = TurtleRP.sortByOrder == 0 and 1 or 0
                 end
                 TurtleRP.sortByKey = "player_name"
+                TurtleRP.updateDirectorySearch()
                 TurtleRP_DirectoryFrame_Directory_ScrollFrameScrollBar:SetValue(0)
-                TurtleRP.renderDirectory(0)
+                TurtleRP.Directory_ScrollBar_Update()
               </OnClick>
             </Scripts>
           </Button>
@@ -461,8 +462,9 @@
                       TurtleRP.sortByOrder = TurtleRP.sortByOrder == 0 and 1 or 0
                     end
                     TurtleRP.sortByKey = textForSort
+                    TurtleRP.updateDirectorySearch()
                     TurtleRP_DirectoryFrame_Directory_ScrollFrameScrollBar:SetValue(0)
-                    TurtleRP.renderDirectory(0)
+                    TurtleRP.Directory_ScrollBar_Update()
                   </OnMouseUp>
                 </Scripts>
               </Frame>
@@ -492,8 +494,9 @@
                   TurtleRP.sortByOrder = TurtleRP.sortByOrder == 0 and 1 or 0
                 end
                 TurtleRP.sortByKey = "status"
+                TurtleRP.updateDirectorySearch()
                 TurtleRP_DirectoryFrame_Directory_ScrollFrameScrollBar:SetValue(0)
-                TurtleRP.renderDirectory(0)
+                TurtleRP.Directory_ScrollBar_Update()
               </OnClick>
             </Scripts>
           </Button>
@@ -694,6 +697,7 @@
             </Anchors>
             <Scripts>
               <OnClick>
+                TurtleRP.updateDirectorySearch()
                 TurtleRP.Directory_ScrollBar_Update()
               </OnClick>
             </Scripts>
@@ -772,7 +776,9 @@
               </OnShow>
               <OnEnterPressed>
                 TurtleRP.searchTerm = this:GetText()
-                TurtleRP.renderDirectory(0)
+                TurtleRP.updateDirectorySearch()
+                TurtleRP_DirectoryFrame_Directory_ScrollFrameScrollBar:SetValue(0)
+                TurtleRP.Directory_ScrollBar_Update()
               </OnEnterPressed>
               <OnEscapePressed>
                 this:ClearFocus();
@@ -806,6 +812,7 @@
           TurtleRP.currentlyViewedPlayerFrame:UnlockHighlight()
           TurtleRP.currentlyViewedPlayerFrame = nil
         end
+        TurtleRP.DirectorySearchResults = nil
       </OnHide>
     </Scripts>
   </Frame>
