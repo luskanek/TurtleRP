@@ -145,7 +145,55 @@ function TurtleRP.Directory_ScrollBar_Update()
 end
 
 function TurtleRP.renderDirectory(directoryOffset)
+<<<<<<< HEAD
   local searchResults = TurtleRP.DirectorySearchResults
+=======
+  local remadeArray = {}
+  local currentArrayNumber = 1
+  -- If NSFW is enabled, surface NSFW Status Column
+  if TurtleRPSettings["show_nsfw"] == "1" then
+    getglobal('NSFW_Column'):Show()
+  else
+    getglobal('NSFW_Column'):Hide()
+  end
+  for i, v in TurtleRPCharacters do
+    if TurtleRPCharacters[i] then
+      if not TurtleRPCharacters[i]['nsfw'] or TurtleRPCharacters[i]['nsfw'] == '' or TurtleRPCharacters[i]['nsfw'] == '0' or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
+         if TurtleRPCharacters[i]['full_name'] == nil then
+         TurtleRPCharacters[i]['full_name'] = ""
+         end
+         local resultShown = true
+         if TurtleRP.searchTerm ~= "" then
+         if string.find(string.lower(i), string.lower(TurtleRP.searchTerm)) == nil and string.find(string.lower(v['full_name']), string.lower(TurtleRP.searchTerm)) == nil then
+            resultShown = false
+         end
+         end
+         if resultShown then
+         remadeArray[currentArrayNumber] = v
+         remadeArray[currentArrayNumber]['player_name'] = i
+         remadeArray[currentArrayNumber]['status'] = "Offline"
+         remadeArray[currentArrayNumber]['zone'] = v['zone'] and v['zone'] or ""
+         if TurtleRPQueryablePlayers[i] then
+            if type(TurtleRPQueryablePlayers[i]) == "number" then
+               if TurtleRPQueryablePlayers[i] > (time() - 65) then
+               remadeArray[currentArrayNumber]['status'] = "Online"
+               end
+            end
+         end
+         currentArrayNumber = currentArrayNumber + 1
+         end
+      end
+    end
+  end
+
+  if TurtleRP.sortByKey ~= nil then
+    if TurtleRP.sortByOrder == 1 then
+      table.sort(remadeArray, function(a, b) return a[TurtleRP.sortByKey] > b[TurtleRP.sortByKey] end)
+    else
+      table.sort(remadeArray, function(a, b) return a[TurtleRP.sortByKey] < b[TurtleRP.sortByKey] end)
+    end
+  end
+>>>>>>> b0e0f82 (Add NSFW Column to Directory for players who have the Show NSFW flag enabled)
 
   local currentFrameNumber = 1
   if directoryOffset == 0 then
@@ -161,6 +209,16 @@ function TurtleRP.renderDirectory(directoryOffset)
       getglobal(thisFrameName .. 'Variable'):SetText(TurtleRP.secondColumn == "Character Name" and thisCharacter['full_name'] or thisCharacter['zone'])
       getglobal(thisFrameName .. '_StatusOffline'):Show()
       getglobal(thisFrameName .. '_StatusOnline'):Hide()
+      -- Only surface NSFW Column if show_nsfw is enabled
+      if TurtleRPSettings["show_nsfw"] == "1" then
+        getglobal(thisFrameName .. '_NSFWStatusFalse'):Show()
+        getglobal(thisFrameName .. '_NSFWStatusTrue'):Hide()
+      end
+      -- Update nsfw status if show_nsfw is enabled
+      if thisCharacter['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1" then
+        getglobal(thisFrameName .. '_NSFWStatusFalse'):Hide()
+        getglobal(thisFrameName .. '_NSFWStatusTrue'):Show()
+      end
       if thisCharacter['status'] == "Online" then
         getglobal(thisFrameName .. '_StatusOffline'):Hide()
         getglobal(thisFrameName .. '_StatusOnline'):Show()
