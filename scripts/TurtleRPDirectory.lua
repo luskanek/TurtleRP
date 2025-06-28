@@ -6,6 +6,7 @@
 function TurtleRP.OpenDirectory()
   UIPanelWindows["TurtleRP_DirectoryFrame"] = { area = "left", pushable = 0 }
   ShowUIPanel(TurtleRP_DirectoryFrame)
+  TurtleRP.updateDirectorySearch()
   TurtleRP.Directory_ScrollBar_Update()
 end
 
@@ -80,68 +81,71 @@ end
 ----
 -- Directory Scroll Manager
 ----
-function TurtleRP.Directory_ScrollBar_Update()
-  local totalDirectoryChars = 0
-  local totalDirectoryOnline = 0
-  for i, v in TurtleRPCharacters do
-   if TurtleRPCharacters[i]['nsfw'] == "0" or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
-      if TurtleRPQueryablePlayers[i] then
-         totalDirectoryChars = totalDirectoryChars + 1
-         if type(TurtleRPQueryablePlayers[i]) == "number" then
-            if TurtleRPQueryablePlayers[i] > (time() - 65) then
-               totalDirectoryOnline = totalDirectoryOnline + 1
-            end
-         end
-      end
-   end
-  end
-  TurtleRP_DirectoryFrame_Directory_Total:SetText(totalDirectoryChars .. " adventurers found (" .. totalDirectoryOnline .. " online)")
+TurtleRP.DirectorySearchResults = nil
 
-  FauxScrollFrame_Update(TurtleRP_DirectoryFrame_Directory_ScrollFrame, totalDirectoryChars * 1.5, 17, 16)
+function TurtleRP.updateDirectorySearch()
+    local totalDirectoryChars = 0
+    local totalDirectoryOnline = 0
+    local searchResults = {}
+    local currentArrayNumber = 1
+    local showNSFW = TurtleRPSettings["show_nsfw"] == "1"
+    local currentTime = time()
+    for i, profile in TurtleRPCharacters do
+        if profile and (showNSFW or profile['nsfw'] == "0") then
+            totalDirectoryChars = totalDirectoryChars + 1
+            if type(TurtleRPQueryablePlayers[i]) == "number" then
+                if TurtleRPQueryablePlayers[i] > (currentTime - 65) then
+                    totalDirectoryOnline = totalDirectoryOnline + 1
+                end
+            end
+      
+      
+            if TurtleRPCharacters[i]['full_name'] == nil then
+                TurtleRPCharacters[i]['full_name'] = ""
+            end
+            local resultShown = true
+            if TurtleRP.searchTerm ~= "" then
+                if string.find(string.lower(i), string.lower(TurtleRP.searchTerm)) == nil and string.find(string.lower(profile['full_name']), string.lower(TurtleRP.searchTerm)) == nil then
+                    resultShown = false
+                end
+            end
+            if resultShown then
+                searchResults[currentArrayNumber] = profile
+                searchResults[currentArrayNumber]['player_name'] = i
+                searchResults[currentArrayNumber]['status'] = "Offline"
+                searchResults[currentArrayNumber]['zone'] = profile['zone'] and profile['zone'] or ""
+                if TurtleRPQueryablePlayers[i] then
+                    if type(TurtleRPQueryablePlayers[i]) == "number" then
+                        if TurtleRPQueryablePlayers[i] > (currentTime - 65) then
+                            searchResults[currentArrayNumber]['status'] = "Online"
+                        end
+                    end
+                end
+                currentArrayNumber = currentArrayNumber + 1
+            end
+        end
+    end
+
+    if TurtleRP.sortByKey ~= nil then
+        if TurtleRP.sortByOrder == 1 then
+            table.sort(searchResults, function(a, b) return a[TurtleRP.sortByKey] > b[TurtleRP.sortByKey] end)
+        else
+            table.sort(searchResults, function(a, b) return a[TurtleRP.sortByKey] < b[TurtleRP.sortByKey] end)
+        end
+    end
+    TurtleRP.DirectorySearchResults = searchResults
+
+    TurtleRP_DirectoryFrame_Directory_Total:SetText(totalDirectoryChars .. " adventurers found (" .. totalDirectoryOnline .. " online)")
+end
+
+function TurtleRP.Directory_ScrollBar_Update()
+  FauxScrollFrame_Update(TurtleRP_DirectoryFrame_Directory_ScrollFrame, table.getn(TurtleRP.DirectorySearchResults), 17, 16)
   local currentLine = FauxScrollFrame_GetOffset(TurtleRP_DirectoryFrame_Directory_ScrollFrame)
   TurtleRP.renderDirectory(currentLine)
 end
 
 function TurtleRP.renderDirectory(directoryOffset)
-  local remadeArray = {}
-  local currentArrayNumber = 1
-  for i, v in TurtleRPCharacters do
-    if TurtleRPCharacters[i] then
-      if not TurtleRPCharacters[i]['nsfw'] or TurtleRPCharacters[i]['nsfw'] == '' or TurtleRPCharacters[i]['nsfw'] == '0' or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
-         if TurtleRPCharacters[i]['full_name'] == nil then
-         TurtleRPCharacters[i]['full_name'] = ""
-         end
-         local resultShown = true
-         if TurtleRP.searchTerm ~= "" then
-         if string.find(string.lower(i), string.lower(TurtleRP.searchTerm)) == nil and string.find(string.lower(v['full_name']), string.lower(TurtleRP.searchTerm)) == nil then
-            resultShown = false
-         end
-         end
-         if resultShown then
-         remadeArray[currentArrayNumber] = v
-         remadeArray[currentArrayNumber]['player_name'] = i
-         remadeArray[currentArrayNumber]['status'] = "Offline"
-         remadeArray[currentArrayNumber]['zone'] = v['zone'] and v['zone'] or ""
-         if TurtleRPQueryablePlayers[i] then
-            if type(TurtleRPQueryablePlayers[i]) == "number" then
-               if TurtleRPQueryablePlayers[i] > (time() - 65) then
-               remadeArray[currentArrayNumber]['status'] = "Online"
-               end
-            end
-         end
-         currentArrayNumber = currentArrayNumber + 1
-         end
-      end
-    end
-  end
-
-  if TurtleRP.sortByKey ~= nil then
-    if TurtleRP.sortByOrder == 1 then
-      table.sort(remadeArray, function(a, b) return a[TurtleRP.sortByKey] > b[TurtleRP.sortByKey] end)
-    else
-      table.sort(remadeArray, function(a, b) return a[TurtleRP.sortByKey] < b[TurtleRP.sortByKey] end)
-    end
-  end
+  local searchResults = TurtleRP.DirectorySearchResults
 
   local currentFrameNumber = 1
   if directoryOffset == 0 then
@@ -150,8 +154,8 @@ function TurtleRP.renderDirectory(directoryOffset)
   for i=directoryOffset, directoryOffset+16 do
     local thisFrameName = "TurtleRP_DirectoryFrame_Directory_Button" .. currentFrameNumber
     getglobal(thisFrameName):Hide()
-    if remadeArray[i] then
-      local thisCharacter = remadeArray[i]
+    if searchResults[i] then
+      local thisCharacter = searchResults[i]
       getglobal(thisFrameName):Show()
       getglobal(thisFrameName .. "Name"):SetText(thisCharacter['player_name'])
       getglobal(thisFrameName .. 'Variable'):SetText(TurtleRP.secondColumn == "Character Name" and thisCharacter['full_name'] or thisCharacter['zone'])
@@ -218,5 +222,6 @@ end
 function TurtleRP.Directory_FrameDropDown_OnClick()
   UIDropDownMenu_SetSelectedID(TurtleRP_Directory_FrameDropDown, this:GetID());
   TurtleRP.secondColumn = this:GetText()
-  TurtleRP.Directory_ScrollBar_Update(0)
+  TurtleRP.updateDirectorySearch()
+  TurtleRP.Directory_ScrollBar_Update()
 end
