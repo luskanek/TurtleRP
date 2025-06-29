@@ -181,50 +181,11 @@ end
 
 function TurtleRP.renderDirectory(directoryOffset)
   local searchResults = TurtleRP.DirectorySearchResults
-  local remadeArray = {}
-  local currentArrayNumber = 1
   -- If NSFW is enabled, surface NSFW Status Column
   if TurtleRPSettings["show_nsfw"] == "1" then
     getglobal('NSFW_Column'):Show()
   else
     getglobal('NSFW_Column'):Hide()
-  end
-  for i, v in TurtleRPCharacters do
-    if TurtleRPCharacters[i] then
-      if not TurtleRPCharacters[i]['nsfw'] or TurtleRPCharacters[i]['nsfw'] == '' or TurtleRPCharacters[i]['nsfw'] == '0' or (TurtleRPCharacters[i]['nsfw'] == "1" and TurtleRPSettings["show_nsfw"] == "1") then
-         if TurtleRPCharacters[i]['full_name'] == nil then
-         TurtleRPCharacters[i]['full_name'] = ""
-         end
-         local resultShown = true
-         if TurtleRP.searchTerm ~= "" then
-         if string.find(string.lower(i), string.lower(TurtleRP.searchTerm)) == nil and string.find(string.lower(v['full_name']), string.lower(TurtleRP.searchTerm)) == nil then
-            resultShown = false
-         end
-         end
-         if resultShown then
-         remadeArray[currentArrayNumber] = v
-         remadeArray[currentArrayNumber]['player_name'] = i
-         remadeArray[currentArrayNumber]['status'] = "Offline"
-         remadeArray[currentArrayNumber]['zone'] = v['zone'] and v['zone'] or ""
-         if TurtleRPQueryablePlayers[i] then
-            if type(TurtleRPQueryablePlayers[i]) == "number" then
-               if TurtleRPQueryablePlayers[i] > (time() - 65) then
-               remadeArray[currentArrayNumber]['status'] = "Online"
-               end
-            end
-         end
-         currentArrayNumber = currentArrayNumber + 1
-         end
-      end
-    end
-  end
-
-  if TurtleRP.sortByKey ~= nil then
-    if TurtleRP.sortByOrder == 1 then
-      table.sort(remadeArray, function(a, b) return sort_users_by_key(a, b, TurtleRP.sortByKey, TurtleRP.sortByOrder) end)
-    else
-      table.sort(remadeArray, function(a, b) return sort_users_by_key(a, b, TurtleRP.sortByKey, TurtleRP.sortByOrder) end)
-    end
   end
 
   local currentFrameNumber = 1
