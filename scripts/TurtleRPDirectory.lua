@@ -166,11 +166,7 @@ function TurtleRP.updateDirectorySearch()
     end
 
     if TurtleRP.sortByKey ~= nil then
-        if TurtleRP.sortByOrder == 1 then
-            table.sort(searchResults, function(a, b) return a[TurtleRP.sortByKey] > b[TurtleRP.sortByKey] end)
-        else
-            table.sort(searchResults, function(a, b) return a[TurtleRP.sortByKey] < b[TurtleRP.sortByKey] end)
-        end
+      table.sort(searchResults, function(a, b) return sort_users_by_key(a, b, TurtleRP.sortByKey, TurtleRP.sortByOrder) end)
     end
     TurtleRP.DirectorySearchResults = searchResults
 

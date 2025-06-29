@@ -556,8 +556,9 @@
                   TurtleRP.sortByOrder = TurtleRP.sortByOrder == 0 and 1 or 0
                 end
                 TurtleRP.sortByKey = "nsfw"
+                TurtleRP.updateDirectorySearch()
                 TurtleRP_DirectoryFrame_Directory_ScrollFrameScrollBar:SetValue(0)
-                TurtleRP.renderDirectory(0)
+                TurtleRP.Directory_ScrollBar_Update()
               </OnClick>
             </Scripts>
           </Button>
