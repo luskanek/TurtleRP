@@ -184,9 +184,7 @@ function TurtleRP.Directory_ScrollBar_Update()
 end
 
 function TurtleRP.renderDirectory(directoryOffset)
-<<<<<<< HEAD
   local searchResults = TurtleRP.DirectorySearchResults
-=======
   local remadeArray = {}
   local currentArrayNumber = 1
   -- If NSFW is enabled, surface NSFW Status Column
@@ -232,7 +230,6 @@ function TurtleRP.renderDirectory(directoryOffset)
       table.sort(remadeArray, function(a, b) return sort_users_by_key(a, b, TurtleRP.sortByKey, TurtleRP.sortByOrder) end)
     end
   end
->>>>>>> b0e0f82 (Add NSFW Column to Directory for players who have the Show NSFW flag enabled)
 
   local currentFrameNumber = 1
   if directoryOffset == 0 then
