@@ -219,6 +219,31 @@
             </Anchor>
           </Anchors>
         </Texture>
+        <!-- Layers Added to expand size of frame, placed in background to render behind the rest as filler -->
+        <Texture name="$parent_BottomRight2" file="Interface\FriendsFrame\WhoFrame-BotRight">
+          <Size>
+            <AbsDimension x="175" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT">
+              <Offset>
+                <AbsDimension x="-90" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <Texture name="$parent_TopRight2" file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
+        <Size>
+          <AbsDimension x="175" y="256"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-90" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Texture>
       </Layer>
       <Layer level="ARTWORK">
         <Texture name="$parent_TopLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopLeft">
@@ -237,12 +262,12 @@
         <Texture name="$parent_TopRight" file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
         <!-- <Texture name="$parent_TopRight" file="Interface\PaperDollInfoFrame\UI-Character-General-TopRight"> -->
           <Size>
-            <AbsDimension x="256" y="256"/>
+            <AbsDimension x="128" y="256"/>
           </Size>
           <Anchors>
             <Anchor point="TOPRIGHT">
               <Offset>
-                <AbsDimension x="0" y="0"/>
+                <AbsDimension x="-50" y="0"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -261,12 +286,12 @@
         </Texture>
         <Texture name="$parent_BottomRight" file="Interface\FriendsFrame\WhoFrame-BotRight">
           <Size>
-            <AbsDimension x="256" y="256"/>
+            <AbsDimension x="128" y="256"/>
           </Size>
           <Anchors>
             <Anchor point="BOTTOMRIGHT">
               <Offset>
-                <AbsDimension x="0" y="0"/>
+                <AbsDimension x="-50" y="0"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -277,7 +302,7 @@
           <Anchors>
             <Anchor point="TOP">
               <Offset>
-                <AbsDimension x="0" y="-18"/>
+                <AbsDimension x="-15" y="-18"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -335,35 +360,6 @@
                   </Anchors>
                 </FontString>
               </Layer>
-              <!-- <Layer level="BACKGROUND">
-                <Texture name="$parent_FrameRight" file="Interface\ClassTrainerFrame\UI-ClassTrainer-FilterBorder">
-                  <Size>
-                    <AbsDimension x="12" y="28"/>
-                  </Size>
-                  <Anchors>
-                    <Anchor point="TOPRIGHT"/>
-                  </Anchors>
-                  <TexCoords left="0.90625" right="1.0" top="0" bottom="1.0"/>
-                </Texture>
-                <Texture name="$parent_FrameMiddle" file="Interface\ClassTrainerFrame\UI-ClassTrainer-FilterBorder">
-                  <Size>
-                    <AbsDimension x="186" y="28"/>
-                  </Size>
-                  <Anchors>
-                    <Anchor point="RIGHT" relativeTo="$parent_FrameRight" relativePoint="LEFT"/>
-                  </Anchors>
-                  <TexCoords left="0.09375" right="0.90625" top="0" bottom="1.0"/>
-                </Texture>
-                <Texture name="$parent_FrameLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-FilterBorder">
-                  <Size>
-                    <AbsDimension x="12" y="28"/>
-                  </Size>
-                  <Anchors>
-                    <Anchor point="RIGHT" relativeTo="$parent_FrameMiddle" relativePoint="LEFT"/>
-                  </Anchors>
-                  <TexCoords left="0" right="0.09375" top="0" bottom="1.0"/>
-                </Texture>
-              </Layer> -->
             </Layers>
             <Frames>
               <!-- <CheckButton name="$parent_LFGButton" virtual="true">
@@ -855,7 +851,7 @@
             <Anchors>
               <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
                 <Offset>
-                  <AbsDimension x="-95" y="-96"/>
+                  <AbsDimension x="-110" y="-96"/>
                 </Offset>
               </Anchor>
             </Anchors>
