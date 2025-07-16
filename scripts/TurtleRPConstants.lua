@@ -71,6 +71,11 @@ TurtleRPDropdownOptions["death"]['a'] = "Acceptable"
 TurtleRPDropdownOptions["death"]['b'] = "Ask First"
 TurtleRPDropdownOptions["death"]['c'] = "No"
 TurtleRPDropdownOptions["death"]['d'] = "Do Not Show"
+TurtleRPDropdownOptions["selected_profile"] = {}
+TurtleRPDropdownOptions["selected_profile"]['0'] = "0"
+TurtleRPDropdownOptions["selected_profile"]['1'] = "1"
+TurtleRPDropdownOptions["selected_profile"]['2'] = "2"
+TurtleRPDropdownOptions["selected_profile"]['3'] = "3"
 
 
 TurtleRPClassData = {}
