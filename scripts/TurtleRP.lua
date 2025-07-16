@@ -40,7 +40,7 @@ TurtleRP.currentlyViewedPlayerFrame = nil
 TurtleRP.locationFrames = {}
 TurtleRP.showDescription = nil
 TurtleRP.secondColumn = "Character Name"
-TurtleRP.sortByKey = "Status"
+TurtleRP.sortByKey = "status"
 TurtleRP.sortByOrder = 1
 TurtleRP.searchTerm = ""
 -- Accounting for PFUI, Go Shagu Go
