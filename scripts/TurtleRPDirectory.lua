@@ -18,6 +18,46 @@ function TurtleRP.SetDirectoryButtonsActive(enable)
   end
 end
 
+
+-- Quick Helper Function to determine if user has key and then performs evaluation
+function sort_users_by_key(user1, user2, sort_key, sort_by_order)
+  -- if User 1 has a key proceed
+    if not (user1[sort_key] == nil) then
+      -- If User 2 also has a key proceed
+      if not (user2[sort_key] == nil) then
+        -- If sort is descending, do greater than
+        if sort_by_order == 1 then
+          return user1[sort_key] > user2[sort_key]
+        else
+          -- Less than if sort is ascending
+          return user1[sort_key] < user2[sort_key]
+        end
+      else
+        -- If user 2 does not have a key but user 1 does return true if descending
+        if sort_by_order == 1 then
+          return true
+        else
+        -- return false if not
+          return false
+        end
+      end
+    else
+      -- If user 1 doesn't have a key but user 2 does have a key
+      if not (user2[sort_key] == nil) then
+        -- return false if descending
+        if sort_by_order == 1 then
+          return false
+        else
+          -- and return true if ascending
+          return true
+        end
+      -- Final Catch if neither has a key, just return false
+      else
+        return false
+      end
+    end
+  end
+
 ----
 -- Map Directory Display
 ----
@@ -127,11 +167,7 @@ function TurtleRP.updateDirectorySearch()
     end
 
     if TurtleRP.sortByKey ~= nil then
-        if TurtleRP.sortByOrder == 1 then
-            table.sort(searchResults, function(a, b) return a[TurtleRP.sortByKey] > b[TurtleRP.sortByKey] end)
-        else
-            table.sort(searchResults, function(a, b) return a[TurtleRP.sortByKey] < b[TurtleRP.sortByKey] end)
-        end
+      table.sort(searchResults, function(a, b) return sort_users_by_key(a, b, TurtleRP.sortByKey, TurtleRP.sortByOrder) end)
     end
     TurtleRP.DirectorySearchResults = searchResults
 
