@@ -63,7 +63,6 @@ function TurtleRP:OnEvent()
     -- TurtleRPCharacterInfo = nil
     -- TurtleRPCharacters = nil
     -- TurtleRPSettings = nil
-
     local TurtleRPCharacterInfoTemplate = {}
 
     TurtleRPCharacterInfoTemplate["keyM"] = TurtleRP.randomchars()
@@ -110,11 +109,26 @@ function TurtleRP:OnEvent()
     TurtleRPSettingsTemplate["hide_minimap_icon"] = "1"
     TurtleRPSettingsTemplate["share_location"] = "0"
     TurtleRPSettingsTemplate["show_nsfw"] = "0"
+    -- Selected Player Profile
+    TurtleRPSettingsTemplate["selected_profile"] = "0"
 
+
+
+    -- The Player Profile Data
+    local TurtleRPPlayerProfilesTemplate = {}
+    TurtleRPPlayerProfilesTemplate["0"] = TurtleRPCharacterInfoTemplate
+    TurtleRPPlayerProfilesTemplate["1"] = TurtleRPCharacterInfoTemplate
+    TurtleRPPlayerProfilesTemplate["2"] = TurtleRPCharacterInfoTemplate
+    TurtleRPPlayerProfilesTemplate["3"] = TurtleRPCharacterInfoTemplate
+
+    if TurtleRPPlayerProfiles == nil then
+      TurtleRPPlayerProfiles = TurtleRPPlayerProfilesTemplate
+    end
     -- Global character defaults setup
     if TurtleRPCharacterInfo == nil then
       TurtleRPCharacterInfo = TurtleRPCharacterInfoTemplate
     end
+
     if TurtleRPCharacters == nil then
       TurtleRPCharacters = {}
       TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
@@ -125,24 +139,13 @@ function TurtleRP:OnEvent()
          end
       end
     end
+
     if TurtleRPSettings == nil then
       TurtleRPSettings = TurtleRPSettingsTemplate
     end
     if TurtleRPQueryablePlayers == nil then
       TurtleRPQueryablePlayers = {}
     end
-
-    -- For adding additional fields after plugin is in use
-    if TurtleRPCharacterInfo ~= nil then
-      for i, field in pairs(TurtleRPCharacterInfoTemplate) do
-        if TurtleRPCharacterInfo[i] == nil then
-          TurtleRPCharacterInfo[i] = TurtleRPCharacterInfoTemplate[i]
-        end
-      end
-      TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
-    end
-
-    -- TurtleRPCharacters["A°hkir"] = TurtleRPCharacters["Ashkir"]
 
     -- For adding additional settings after plugin is in use
     if TurtleRPSettings ~= nil then
@@ -152,6 +155,19 @@ function TurtleRP:OnEvent()
         end
       end
     end
+    -- For adding additional fields after plugin is in use
+    if TurtleRPCharacterInfo ~= nil then
+      for i, field in pairs(TurtleRPCharacterInfoTemplate) do
+        if TurtleRPCharacterInfo[i] == nil then
+          TurtleRPCharacterInfo[i] = TurtleRPCharacterInfoTemplate[i]
+        end
+      end
+      TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
+      TurtleRPPlayerProfiles[TurtleRPSettings["selected_profile"]] = TurtleRPCharacterInfo
+    end
+
+    -- TurtleRPCharacters["A°hkir"] = TurtleRPCharacters["Ashkir"]
+
 
     -- Intro message
     TurtleRP.log("Welcome, |cff8C48AB" .. TurtleRPCharacterInfo["full_name"] .. "|ccfFFFFFF, to TurtleRP.")
@@ -317,6 +333,8 @@ function TurtleRP.populate_interface_user_data()
   if TurtleRPSettings["show_nsfw"] == "1" then
     TurtleRP_AdminSB_Content5_ShowNSFWButton:SetChecked(true)
   end
+  -- Setup Profile Dropdown
+  TurtleRP.SetProfileDropdown()
 end
 
 function TurtleRP.setCharacterIcon()
@@ -349,9 +367,33 @@ function TurtleRP.setAtAGlanceIcons()
   end
 end
 
+-- Profile Drop Down setup
+function TurtleRP.SetProfileDropdown()
+    if TurtleRPSettings['selected_profile'] ~= nil then
+      local thisValue = TurtleRPSettings['selected_profile']
+      local v = TurtleRP_AdminSB_Content5_ProfileDropdown
+      getglobal(v:GetName() .. "_Text"):SetText(TurtleRPDropdownOptions['selected_profile'][thisValue])
+      UIDropDownMenu_SetSelectedValue(v, thisValue)
+    end
+  end
+    
 -----
 -- Saving
 -----
+
+function TurtleRP.change_character_profile()
+  -- Save Existing Profile
+  local selected_profile = TurtleRPSettings["selected_profile"]
+  TurtleRPPlayerProfiles[selected_profile] = TurtleRPCharacterInfo
+  -- Get Profile to Swap To
+  selected_profile = UIDropDownMenu_GetSelectedValue(TurtleRP_AdminSB_Content5_ProfileDropdown)
+  TurtleRPSettings["selected_profile"] = selected_profile ~= nil and selected_profile or 0
+  -- Swap Profiles
+  TurtleRPCharacterInfo = TurtleRPPlayerProfiles[selected_profile]
+  TurtleRPCharacters[UnitName("player")] = TurtleRPCharacterInfo
+  TurtleRP.populate_interface_user_data()
+end
+
 function TurtleRP.change_nsfw_status()
   if TurtleRPCharacterInfo["nsfw"] ~= "1" then
     TurtleRPCharacterInfo["nsfw"] = "1"
