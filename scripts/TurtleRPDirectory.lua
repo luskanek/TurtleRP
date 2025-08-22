@@ -125,7 +125,7 @@ function TurtleRP.updateDirectorySearch()
     local showNSFW = TurtleRPSettings["show_nsfw"] == "1"
     local currentTime = time()
     for i, profile in TurtleRPCharacters do
-        if profile and (showNSFW or profile['nsfw'] == "0") then
+        if profile and (showNSFW or profile['nsfw'] == "0" or profile['nsfw'] == "" or profile['nsfw'] == nil) then
             totalDirectoryChars = totalDirectoryChars + 1
             if type(TurtleRPQueryablePlayers[i]) == "number" then
                 if TurtleRPQueryablePlayers[i] > (currentTime - 65) then
