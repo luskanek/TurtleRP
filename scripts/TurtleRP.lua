@@ -506,16 +506,31 @@ end
 -----
 -- Utility
 -----
-function string:split(delimiter)
-    local result = {}
-    local from = 1
-    local delim_from, delim_to = string.find(self, delimiter, from)
-    while delim_from do
-        table.insert(result, string.sub(self, from, delim_from - 1))
-        from = delim_to + 1
-        delim_from, delim_to = string.find(self, delimiter, from)
+local setn = table.setn
+local strFind = string.find
+local strSub = string.sub
+function TurtleRP.splitString(str, delimiter, t)
+    local result
+    if t then
+        -- Reuse this table
+        for k, v in ipairs(t) do
+            t[k] = nil
+        end
+        result = t
+    else
+        result = {}
     end
-    table.insert(result, string.sub(self, from))
+    local from = 1
+    local delim_from, delim_to = strFind(str, delimiter, from, true)
+    local i = 1
+    while delim_from do
+        result[i] = strSub(str, from, delim_from - 1)
+        i = i + 1
+        from = delim_to + 1
+        delim_from, delim_to = strFind(str, delimiter, from, true)
+    end
+    result[i] = strSub(str, from)
+    setn(result, i)
     return result
 end
 

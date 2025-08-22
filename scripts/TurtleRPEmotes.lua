@@ -67,7 +67,7 @@ function TurtleRP.emote_events()
           if TurtleRP.sendingLongForm > TurtleEmoteCounter then
             if TurtleLastSender[this:GetID()] and TurtleLastSender[this:GetID()] == arg2 then
               if string.find(TurtleLastEmote[this:GetID()], '"') then
-                local splitArrayQuotes = string.split(TurtleLastEmote[this:GetID()], '"')
+                local splitArrayQuotes = TurtleRP.splitString(TurtleLastEmote[this:GetID()], '"')
                 local numberOfQuotes = getn(splitArrayQuotes) + 1
                 if (numberOfQuotes - math.floor(numberOfQuotes/2)*2) ~= 0 then -- an odd number of quotes!
                   if beginningQuoteFlag[this:GetID()] == 1 then
@@ -88,7 +88,7 @@ function TurtleRP.emote_events()
         TurtleLastSender[this:GetID()] = arg2
         savedEvent = "TURTLE_TAKEOVER"
         local nameString = arg2
-        local splitArray = string.split(arg1, '"')
+        local splitArray = TurtleRP.splitString(arg1, '"')
         local firstChunk = splitArray[1]
         local firstChars = strsub(firstChunk, 1, 3)
         if firstChars == "|| " then
@@ -124,14 +124,14 @@ function TurtleRP.emote_events()
 end
 
 function TurtleRP.SendLongFormMessage(type, message)
-  local splitMessage = string.split(message, " ")
+  local splitMessage = TurtleRP.splitString(message, " ")
   local currentCharCount = 0
   local currentMessageString = ""
   local emotePrefix = ""
   if type == "Emote" then
     if TurtleRP.sendWithError == nil then
       if string.find(message, '"') then
-        local splitArrayQuotes = string.split(message, '"')
+        local splitArrayQuotes = TurtleRP.splitString(message, '"')
         local numberOfQuotes = getn(splitArrayQuotes) + 1
         if (numberOfQuotes - math.floor(numberOfQuotes/2)*2) ~= 0 then -- an odd number of quotes!
           TurtleRP.errorMessage = message
