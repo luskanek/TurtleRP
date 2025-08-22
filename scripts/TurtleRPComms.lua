@@ -31,16 +31,18 @@ local lastRequestType = nil
 local lastPlayerName = nil
 local timeOfLastSend = time()
 
+local splitString
+
 -----
 -- Interface interaction for communication and display
 -----
 function TurtleRP.mouseover_and_target_events()
-
+  splitString = TurtleRP.splitString -- Setting this here because TurtleRP.lua is loaded after this file
   -- Player target
-  local TurtleRPTargetFrame = CreateFrame("Frame")
+  local TurtleRPTargetFrame = CreateFrame("Frame", "TurtleRPTargetFrame")
   TurtleRPTargetFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
   TurtleRPTargetFrame:SetScript("OnEvent",
-  	function(self, event, ...)
+  	function()
       if (IsInInstance() == "pvp" and TurtleRPSettings["bgs"] == "off") or IsInInstance() ~= "pvp" then
         if (UnitIsPlayer("target")) then
           if UnitName("target") == UnitName("player") then
@@ -57,10 +59,10 @@ function TurtleRP.mouseover_and_target_events()
   )
 
   -- Other player mouseover
-  local TurtleRPMouseoverFrame = CreateFrame("Frame")
+  local TurtleRPMouseoverFrame = CreateFrame("Frame", "TurtleRPMouseoverFrame")
   TurtleRPMouseoverFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
   TurtleRPMouseoverFrame:RegisterEvent("CURSOR_UPDATE")
-  TurtleRPMouseoverFrame:SetScript("OnEvent",function(self, event)
+  TurtleRPMouseoverFrame:SetScript("OnEvent", function()
       -- Ensuring defaults are in place
       if (IsInInstance() == "pvp" and TurtleRPSettings["bgs"] == "off") or IsInInstance() ~= "pvp" then
         if (UnitIsPlayer("mouseover")) then
@@ -95,22 +97,13 @@ function TurtleRP.communication_prep()
   end
 
   local TurtleRPChannelJoinDelay = CreateFrame("Frame")
-  TurtleRPChannelJoinDelay:Hide()
-  TurtleRPChannelJoinDelay:SetScript("OnShow", function()
-      this.startTime = GetTime()
-  end)
-  TurtleRPChannelJoinDelay:SetScript("OnHide", function()
-      TurtleRP.checkTTRPChannel()
-  end)
+  local delayedTime = GetTime() + 15
   TurtleRPChannelJoinDelay:SetScript("OnUpdate", function()
-    local plus = 15 --seconds
-    local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
-    if gt >= st then
-        TurtleRPChannelJoinDelay:Hide()
+    if GetTime() >= delayedTime then
+        this:SetScript("OnUpdate", nil)
+        TurtleRP.checkTTRPChannel()
     end
   end)
-  TurtleRPChannelJoinDelay:Show()
 end
 
 function TurtleRP.send_ping_message()
@@ -118,28 +111,18 @@ function TurtleRP.send_ping_message()
     TurtleRP.pingWithLocationAndVersion("P")
   end
 
-  local TurtleRPChannelPingDelay = CreateFrame("Frame")
-  TurtleRPChannelPingDelay:Hide()
-  TurtleRPChannelPingDelay:SetScript("OnShow", function()
-      this.startTime = GetTime()
-  end)
-  TurtleRPChannelPingDelay:SetScript("OnHide", function()
-      TurtleRPChannelPingDelay:Show()
-  end)
+  local TurtleRPChannelPingDelay = CreateFrame("Frame", "TurtleRPChannelPingDelay")
+  local nextSend = GetTime() + TurtleRP.timeBetweenPings
   TurtleRPChannelPingDelay:SetScript("OnUpdate", function()
-    local plus = TurtleRP.timeBetweenPings --seconds
-    local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
-    if gt >= st then
+    if GetTime() >= nextSend then
+      nextSend = GetTime() + TurtleRP.timeBetweenPings
       if TurtleRP.disableMessageSending == nil then
         if UnitLevel("player") > 4 then
           TurtleRP.pingWithLocationAndVersion("P")
         end
       end
-      TurtleRPChannelPingDelay:Hide()
     end
   end)
-  TurtleRPChannelPingDelay:Show()
 end
 
 
@@ -212,8 +195,8 @@ function TurtleRP.sendRequestForData(requestType, playerName)
 end
 
 function TurtleRP.checkChatMessage(msg, playerName)
-  if string.find(msg, ':') then
-    local colonStart, colonEnd = string.find(msg, ':')
+  local colonStart, colonEnd = string.find(msg, ':')
+  if colonStart then
     local dataPrefix = string.sub(msg, 1, colonEnd - 1)
     local tildeStart, tildeEnd = string.find(msg, '~')
     if tildeStart then
@@ -246,10 +229,11 @@ function TurtleRP.checkUniqueKey(dataPrefix, msg)
   return keyValid
 end
 
+local dataSplitTable = {}
 function TurtleRP.getDataFromString(msg)
   local beginningOfData = strfind(msg, "~")
   local dataSlice = strsub(msg, beginningOfData)
-  local splitArray = string.split(dataSlice, "~")
+  local splitArray = splitString(dataSlice, "~", dataSplitTable)
   return splitArray
 end
 
@@ -286,18 +270,15 @@ function TurtleRP.buildDataStringToSend(dataPrefix)
   return stringToSend
 end
 
+local dataKeys = {
+    ["M"] = {"keyM", "icon", "full_name", "race", "class", "class_color", "ooc_info", "ic_info", "currently_ic", "ooc_pronouns", "ic_pronouns", "nsfw"},
+    ["T"] = {"keyT", "atAGlance1", "atAGlance1Title", "atAGlance1Icon", "atAGlance2", "atAGlance2Title", "atAGlance2Icon", "atAGlance3", "atAGlance3Title", "atAGlance3Icon", "experience", "walkups", "injury", "romance", "death"},
+    ["D"] = {"keyD", "description"}
+}
+dataKeys["MR"], dataKeys["TR"], dataKeys["DR"] = dataKeys["M"], dataKeys["T"], dataKeys["D"]
+local emptyDataKeys = {}
 function TurtleRP.dataKeys(dataPrefix)
-  local dataKeys = {}
-  if dataPrefix == "M" or dataPrefix == "MR" then
-    dataKeys = { "keyM", "icon", "full_name", "race", "class", "class_color", "ooc_info", "ic_info", "currently_ic", "ooc_pronouns", "ic_pronouns", "nsfw" }
-  end
-  if dataPrefix == "T" or dataPrefix == "TR" then
-    dataKeys = { "keyT", "atAGlance1", "atAGlance1Title", "atAGlance1Icon", "atAGlance2", "atAGlance2Title", "atAGlance2Icon", "atAGlance3", "atAGlance3Title", "atAGlance3Icon", "experience", "walkups", "injury", "romance", "death" }
-  end
-  if dataPrefix == "D" or dataPrefix == "DR" then
-    dataKeys = { "keyD", "description" }
-  end
-  return dataKeys
+    return dataKeys[dataPrefix] or emptyDataKeys
 end
 
 function TurtleRP.storeChunkedData(dataPrefix, playerName, stringData)
@@ -322,12 +303,13 @@ function TurtleRP.storeChunkedData(dataPrefix, playerName, stringData)
   return readyToProcess
 end
 
+local processSplitTable = {}
 function TurtleRP.processAndStoreData(dataPrefix, playerName)
-  local splitString = string.split(TurtleRPCharacters[playerName]["temp" .. dataPrefix], "~")
+  local strs = splitString(TurtleRPCharacters[playerName]["temp" .. dataPrefix], "~", processSplitTable)
   local dataToSave = TurtleRP.dataKeys(dataPrefix)
   for i, dataRef in ipairs(dataToSave) do
-    if splitString[i] ~= nil then
-      TurtleRPCharacters[playerName][dataRef] = splitString[i]
+    if strs[i] ~= nil then
+      TurtleRPCharacters[playerName][dataRef] = strs[i]
     else
       TurtleRPCharacters[playerName][dataRef] = ""
     end
@@ -365,28 +347,30 @@ function TurtleRP.recieveAndStoreData(dataPrefix, playerName, msg)
   end
 end
 
+local pingSplitTable = {}
 function TurtleRP.recievePingInformation(playerName, msg)
-  local zoneText = string.sub(msg, 2)
-  TurtleRPQueryablePlayers[playerName] = time()
-  if TurtleRPCharacters[playerName] == nil then
-    TurtleRPCharacters[playerName] = {}
-  end
-  TurtleRPCharacters[playerName]['zone'] = zoneText
-  if string.find(zoneText, '~') then
-    local splitString = string.split(zoneText, "~")
-    local zone = splitString[1]
-    TurtleRPCharacters[playerName]['zone'] = zone
-    if splitString[2] and splitString[3] then
-      local zoneX = splitString[2]
-      local zoneY = splitString[3]
-      TurtleRPCharacters[playerName]['zoneX'] = zoneX
-      TurtleRPCharacters[playerName]['zoneY'] = zoneY
-      -- Only update player locations if the player is in the zone we're looking at
-      if zone == TurtleRP.GetZones(GetCurrentMapContinent())[GetCurrentMapZone()] then
-        TurtleRP.show_player_locations()
-      end
+    local zoneText = string.sub(msg, 2)
+    TurtleRPQueryablePlayers[playerName] = time()
+    if TurtleRPCharacters[playerName] == nil then
+        TurtleRPCharacters[playerName] = {}
     end
-  end
+    local charData = TurtleRPCharacters[playerName]
+    charData['zone'] = zoneText
+    local strs = splitString(zoneText, "~", pingSplitTable)
+    if table.getn(strs) < 3 then
+        return
+    end
+    local zone = strs[1]
+    charData['zone'] = zone
+    charData['zoneX'] = strs[2]
+    charData['zoneY'] = strs[3]
+    -- Only update player locations if the player is in the zone we're looking at
+    if not WorldMapFrame:IsVisible() then
+        return
+    end
+    if zone == TurtleRP.GetZones(GetCurrentMapContinent())[GetCurrentMapZone()] then
+        TurtleRP.show_player_locations()
+    end
 end
 
 function TurtleRP.displayData(dataPrefix, playerName)
@@ -440,18 +424,20 @@ function TurtleRP.pingWithLocationAndVersion(message)
   TurtleRP.ttrpChatSend(message)
 end
 
+local strGsub = string.gsub
+
 function TurtleRP.DrunkEncode(text)
-	text = string.gsub(text, "s", "°");
-	text = string.gsub(text, "S", "§");
-	return text;
+    text = strGsub(text, "s", "°")
+    text = strGsub(text, "S", "§")
+    return text
 end
 
+local DrunkSuffix = string.gsub(SLURRED_SPEECH, "%%s(.+)", "%1$"); -- remove "%s" from the localized " ...hic!" text
 function TurtleRP.DrunkDecode(text)
-  local DrunkSuffix = string.gsub(SLURRED_SPEECH, "%%s(.+)", "%1$"); -- remove "%s" from the localized " ...hic!" text;
-	text = string.gsub(text, "°", "s");
-	text = string.gsub(text, "§", "S");
-	text = string.gsub(text, DrunkSuffix, ""); -- likely only needed if decoding an entire message
-	return text;
+	text = strGsub(text, "°", "s")
+	text = strGsub(text, "§", "S")
+	text = strGsub(text, DrunkSuffix, "") -- likely only needed if decoding an entire message
+	return text
 end
 
 function TurtleRP.ttrpChatSend(message)

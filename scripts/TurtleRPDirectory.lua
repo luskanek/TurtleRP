@@ -63,56 +63,50 @@ function sort_users_by_key(user1, user2, sort_key, sort_by_order)
 ----
 function TurtleRP.display_nearby_players()
 
-  local zoneListener = CreateFrame("Frame")
+  local zoneListener = CreateFrame("Frame", "TurtleRPZoneListener")
   zoneListener:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   zoneListener:RegisterEvent("WORLD_MAP_UPDATE")
   zoneListener:SetScript("OnEvent", function()
-    for i, v in TurtleRP.locationFrames do
-      TurtleRP.locationFrames[i]:Hide()
+    for i, frame in TurtleRP.locationFrames do
+      frame:Hide()
     end
     TurtleRP.show_player_locations()
   end)
 end
 
 function TurtleRP.show_player_locations()
+  if not WorldMapFrame:IsVisible() then
+    return
+  end
+  local locationFrames = TurtleRP.locationFrames
+  for _, frame in ipairs(locationFrames) do
+    frame:Hide()
+  end
   local onlinePlayers = TurtleRP.get_players_online()
-  local createdFrames = 0
+  local frameCount = 0
   local zonesByID = TurtleRP.GetZones(GetCurrentMapContinent())
   local currentZone = GetCurrentMapZone()
   local selfName = UnitName("player")
   for charName, character in pairs(onlinePlayers) do
     if charName ~= selfName then
       local zone = character["zone"]
-      local zoneX = character["zoneX"]
-      local zoneY = character["zoneY"]
-      if character and zone == zonesByID[currentZone] then
-        if zoneX and zoneY then
-          if zoneX ~= "false" and zoneY ~= "false" then
-            zoneX = tonumber(zoneX)
-            zoneY = tonumber(zoneY)
-            local playerPositionFrame = getglobal("TurtleRP_MapPlayerPosition_" .. createdFrames)
-            if playerPositionFrame == nil then
-              playerPositionFrame = CreateFrame("Button", "TurtleRP_MapPlayerPosition_" .. createdFrames, WorldMapDetailFrame, "TurtleRP_WorldMapUnitTemplate")
-              table.insert(TurtleRP.locationFrames, playerPositionFrame)
-            end
-            local mapWidth = WorldMapDetailFrame:GetWidth()
-            local mapLeft = WorldMapDetailFrame:GetLeft()
-            local mapHeight = WorldMapDetailFrame:GetHeight()
-            local mapLeft = WorldMapDetailFrame:GetLeft()
-            playerPositionFrame.full_name = charName
-            if character['full_name'] ~= nil and character['full_name'] ~= "" then
-              playerPositionFrame.full_name = character['full_name']
-            end
-            playerPositionFrame:SetPoint("CENTER", WorldMapDetailFrame, "TOPLEFT", zoneX * mapWidth, zoneY * mapHeight * -1)
-            playerPositionFrame:Show()
-            createdFrames = createdFrames + 1
-          else
-            if getglobal("TurtleRP_MapPlayerPosition_" .. createdFrames) then
-              getglobal("TurtleRP_MapPlayerPosition_" .. createdFrames):Hide()
-            end
-            createdFrames = createdFrames + 1
-          end
+      local zoneX = tonumber(character["zoneX"])
+      local zoneY = tonumber(character["zoneY"])
+      if zone == zonesByID[currentZone] and zoneX and zoneY then
+        local playerPositionFrame = locationFrames[frameCount]
+        if playerPositionFrame == nil then
+            playerPositionFrame = CreateFrame("Frame", "TurtleRP_MapPlayerPosition_" .. frameCount, WorldMapDetailFrame, "TurtleRP_WorldMapUnitTemplate")
+            table.insert(TurtleRP.locationFrames, playerPositionFrame)
         end
+        local mapWidth = WorldMapDetailFrame:GetWidth()
+        local mapHeight = WorldMapDetailFrame:GetHeight()
+        playerPositionFrame.full_name = charName
+        if character['full_name'] ~= nil and character['full_name'] ~= "" then
+            playerPositionFrame.full_name = character['full_name']
+        end
+        playerPositionFrame:SetPoint("CENTER", WorldMapDetailFrame, "TOPLEFT", zoneX * mapWidth, zoneY * mapHeight * -1)
+        playerPositionFrame:Show()
+        frameCount = frameCount + 1
       end
     end
   end
@@ -212,13 +206,11 @@ function TurtleRP.get_players_online()
     onlinePlayers[k] = nil
   end
   local currentTime = time()
-  for i, v in pairs(TurtleRPCharacters) do
-    if TurtleRPQueryablePlayers[i] then
-      if type(TurtleRPQueryablePlayers[i]) == "number" then
-        if TurtleRPQueryablePlayers[i] > (currentTime - 65) then
-          onlinePlayers[i] = v
-        end
-      end
+  for name, time in pairs(TurtleRPQueryablePlayers) do
+    if type(time) == "number" and time > (currentTime - 65) then
+        onlinePlayers[name] = TurtleRPCharacters[name]
+    else
+        TurtleRPQueryablePlayers[name] = nil -- Clean up queryable players that are no longer queryable
     end
   end
   return onlinePlayers
