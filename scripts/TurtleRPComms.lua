@@ -65,7 +65,7 @@ function TurtleRP.mouseover_and_target_events()
   TurtleRPMouseoverFrame:SetScript("OnEvent", function()
       -- Ensuring defaults are in place
       if (IsInInstance() == "pvp" and TurtleRPSettings["bgs"] == "off") or IsInInstance() ~= "pvp" then
-        if (UnitIsPlayer("mouseover")) then
+        if UnitIsPlayer("mouseover") then
           TurtleRP.sendRequestForData("M", UnitName("mouseover"))
         end
       end
@@ -92,7 +92,7 @@ end
 
 -- This function often runs too early
 function TurtleRP.communication_prep()
-  if UnitLevel("player") > 4 then
+  if TurtleRP.canChat() then
     TurtleRP.pingWithLocationAndVersion("A")
   end
 
@@ -107,7 +107,7 @@ function TurtleRP.communication_prep()
 end
 
 function TurtleRP.send_ping_message()
-  if UnitLevel("player") > 4 then
+  if TurtleRP.canChat() then
     TurtleRP.pingWithLocationAndVersion("P")
   end
 
@@ -117,7 +117,7 @@ function TurtleRP.send_ping_message()
     if GetTime() >= nextSend then
       nextSend = GetTime() + TurtleRP.timeBetweenPings
       if TurtleRP.disableMessageSending == nil then
-        if UnitLevel("player") > 4 then
+        if TurtleRP.canChat() then
           TurtleRP.pingWithLocationAndVersion("P")
         end
       end
@@ -138,11 +138,11 @@ function TurtleRP.checkTTRPChannel()
   end
   if TurtleRP.channelIndex == 0 then
     JoinChannelByName(TurtleRP.channelName)
-    if UnitLevel("player") > 4 then
+    if TurtleRP.canChat() then
       TurtleRP.pingWithLocationAndVersion("A")
     end
   else
-    if UnitLevel("player") > 4 then
+    if TurtleRP.canChat() then
       TurtleRP.pingWithLocationAndVersion("A")
     end
   end
@@ -178,6 +178,9 @@ end
 ----
 
 function TurtleRP.sendRequestForData(requestType, playerName)
+  if not TurtleRP.canChat() then
+    return
+  end
   if timeOfLastSend < (time() - 2) or lastRequestType ~= requestType then
     timeOfLastSend = time()
     lastRequestType = requestType
@@ -202,7 +205,7 @@ function TurtleRP.checkChatMessage(msg, playerName)
     if tildeStart then
       local playerNameFromString = string.sub(msg, colonEnd + 1, tildeEnd - 1)
       if playerNameFromString == UnitName("player") then
-        if TurtleRP.checkUniqueKey(dataPrefix, msg) ~= true then
+        if TurtleRP.canChat() and TurtleRP.checkUniqueKey(dataPrefix, msg) ~= true then
           TurtleRP.sendData(dataPrefix)
         end
       else
