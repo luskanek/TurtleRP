@@ -424,6 +424,62 @@
         </Scripts>
         <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
       </Button>
+      <Button name="$parent_NamesButton" inherits="UIPanelButtonGrayTemplate" movable="true">
+        <Size>
+          <AbsDimension x="25" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent_CloakButton" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <Texture file="Interface\Icons\spell_shadow_mindsteal">
+              <Size x="13" y="13"/>
+              <Anchors>
+                <Anchor point="CENTER" />
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnClick>
+            if TurtleRP.movingIconTray == nil then
+              if GetCVar("UnitNameNPC") == "1" or GetCVar("UnitNamePlayer") == "1" then
+                SetCVar("UnitNameNPC", 0)
+                SetCVar("UnitNamePlayer", 0)
+              else
+                SetCVar("UnitNameNPC", 1)
+                SetCVar("UnitNamePlayer", 1)
+              end
+            end
+          </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            if ShowingCloak() then
+              GameTooltip:SetText("Toggle NPC and Player Names")
+            else
+              GameTooltip:SetText("Show Cloak")
+            end
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
+          <OnMouseDown>
+            TurtleRP_IconTray:StartMoving()
+            TurtleRP.IconTrayMover('mousedown', this)
+          </OnMouseDown>
+          <OnMouseUp>
+            TurtleRP_IconTray:StopMovingOrSizing()
+            TurtleRP.IconTrayMover('mouseup', this)
+          </OnMouseUp>
+        </Scripts>
+        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+      </Button>
     </Frames>
   </Frame>
 </Ui>
