@@ -15,6 +15,7 @@ TurtleRP.latestVersion = TurtleRP.currentVersion
 TurtleRP.channelName = "TTRP"
 TurtleRP.channelIndex = 0
 TurtleRP.timeBetweenPings = 30
+TurtleRP.minChatLevel = 10
 TurtleRP.currentlyRequestedData = nil
 TurtleRP.disableMessageSending = nil
 TurtleRP.sendingLongForm = nil
@@ -173,8 +174,8 @@ function TurtleRP:OnEvent()
     TurtleRP.log("Welcome, |cff8C48AB" .. TurtleRPCharacterInfo["full_name"] .. "|ccfFFFFFF, to TurtleRP.")
     TurtleRP.log("Type |cff8C48AB/ttrp |ccfFFFFFFto open the addon, or |cff8C48AB/ttrp help|ccfFFFFFF to see slash commands.")
 
-    if GetRealmName() == "Turtle WoW" and UnitLevel("player") < 5 and UnitLevel("player") ~= 0 then
-      TurtleRP.log("|cff8C48ABSorry, but due to Turtle WoW restrictions you can't access other player's TurtleRP profiles until level 5.")
+    if not TurtleRP.canChat() and UnitLevel("player") ~= 0 then
+      TurtleRP.log("Sorry, but due to Turtle WoW restrictions you can't access other player's TurtleRP profiles until level "..TurtleRP.minChatLevel..".")
     end
 
     TurtleRP.communication_prep()
@@ -501,6 +502,10 @@ function TurtleRP.save_character_notes()
   local notes = TurtleRP_CharacterDetails_Notes_NotesScrollBox_NotesInput:GetText()
   TurtleRP_CharacterDetails_Notes_NotesScrollBox_NotesInput:ClearFocus()
   TurtleRPCharacterInfo["character_notes"][TurtleRP.currentlyViewedPlayer] = notes
+end
+
+function TurtleRP.canChat()
+    return UnitLevel("player") >= TurtleRP.minChatLevel
 end
 
 -----
