@@ -39,6 +39,14 @@
           		TurtleRP.EnableRPMode();
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("Enable RP Mode")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -73,6 +81,14 @@
           		TurtleRP.DisableRPMode();
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("Disable RP Mode")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -104,6 +120,14 @@
               TurtleRP.change_ic_status()
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("You are OOC (Out Of Character)")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -135,6 +159,14 @@
               TurtleRP.change_ic_status()
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("You are IC (In Character)")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -173,6 +205,14 @@
               TurtleRP_ChatBox:Show()
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("Open Extended Chat Window")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -184,7 +224,6 @@
         </Scripts>
         <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
       </Button>
-
       <Button name="$parent_AdminButton" inherits="UIPanelButtonGrayTemplate" movable="true">
         <Size>
           <AbsDimension x="25" y="25"/>
@@ -212,6 +251,14 @@
               TurtleRP.OpenAdmin()
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("Open Main Window")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -223,7 +270,6 @@
         </Scripts>
         <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
       </Button>
-
       <Button name="$parent_DirectoryButton" inherits="UIPanelButtonGrayTemplate" movable="true">
         <Size>
           <AbsDimension x="25" y="25"/>
@@ -251,6 +297,14 @@
               TurtleRP.OpenDirectory()
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetText("Open Directory Window")
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -262,8 +316,6 @@
         </Scripts>
         <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
       </Button>
-
-
       <Button name="$parent_HelmButton" inherits="UIPanelButtonGrayTemplate" movable="true">
         <Size>
           <AbsDimension x="25" y="25"/>
@@ -295,6 +347,18 @@
               end
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            if ShowingHelm() then
+              GameTooltip:SetText("Hide Helm")
+            else
+              GameTooltip:SetText("Show Helm")
+            end
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
@@ -306,8 +370,6 @@
         </Scripts>
         <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
       </Button>
-
-
       <Button name="$parent_CloakButton" inherits="UIPanelButtonGrayTemplate" movable="true">
         <Size>
           <AbsDimension x="25" y="25"/>
@@ -339,6 +401,18 @@
               end
             end
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            if ShowingCloak() then
+              GameTooltip:SetText("Hide Cloak")
+            else
+              GameTooltip:SetText("Show Cloak")
+            end
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
           <OnMouseDown>
             TurtleRP_IconTray:StartMoving()
             TurtleRP.IconTrayMover('mousedown', this)
