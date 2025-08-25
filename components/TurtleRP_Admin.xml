@@ -2125,21 +2125,18 @@
             </OnLoad>
           </Scripts>
         </Frame>
-        <Button name="$parent_SaveButton" inherits="UIPanelButtonGrayTemplate" text="Load Selected Profile">
+        <Button name="$parent_SaveButton" inherits="UIPanelButtonTemplate2" text="Load Selected Profile">
             <Size>
-              <AbsDimension x="120" y="25" />
+              <AbsDimension x="148" y="25" />
             </Size>
             <Anchors>
-              <Anchor point="RIGHT" relativeTo="$parent_ProfileDropdown" relativePoint="RIGHT">
+              <Anchor point="LEFT" relativeTo="$parent_ProfileDropdown" relativePoint="RIGHT">
                 <Offset>
-                  <AbsDimension x="225" y="2"/>
+                  <AbsDimension x="84" y="2"/>
                 </Offset>
               </Anchor>
             </Anchors>
         		<Scripts>
-              <OnLoad>
-                this:SetFont("Fonts\\FRIZQT__.ttf", 10)
-              </OnLoad>
               <OnClick>
                 TurtleRP.change_character_profile()
               </OnClick>
