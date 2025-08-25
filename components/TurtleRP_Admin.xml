@@ -1977,6 +1977,29 @@
               </OnClick>
             </Scripts>
           </CheckButton>
+          <Button name="$parent_TrayResetButton" inherits="UIPanelButtonTemplate2" text="Reset Tray Position">
+            <Size>
+              <AbsDimension x="132" y="24" />
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="$parent_TrayButton" relativePoint="RIGHT">
+                <Offset>
+                  <AbsDimension x="4" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnClick>
+                  TurtleRP_IconTray:ClearAllPoints()
+                  TurtleRP_IconTray:SetPoint("CENTER", "UIParent")
+                  TurtleRP_IconTray:Show()
+
+                  TurtleRPSettings["tray"] = "1"
+
+                  TurtleRP_AdminSB_Content5_TrayButton:SetChecked(1)
+              </OnClick>
+            </Scripts>
+          </Button>
           <!-- Name Button -->
           <CheckButton name="$parent_NameButton" inherits="UICheckButtonTemplate">
             <Size>
