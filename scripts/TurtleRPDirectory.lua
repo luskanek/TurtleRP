@@ -132,8 +132,8 @@ function TurtleRP.updateDirectorySearch()
                     totalDirectoryOnline = totalDirectoryOnline + 1
                 end
             end
-      
-      
+
+
             if TurtleRPCharacters[i]['full_name'] == nil then
                 TurtleRPCharacters[i]['full_name'] = ""
             end

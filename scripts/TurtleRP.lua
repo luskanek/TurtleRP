@@ -377,7 +377,7 @@ function TurtleRP.SetProfileDropdown()
       UIDropDownMenu_SetSelectedValue(v, thisValue)
     end
   end
-    
+
 -----
 -- Saving
 -----
